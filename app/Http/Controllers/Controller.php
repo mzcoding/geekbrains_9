@@ -22,7 +22,7 @@ class Controller extends BaseController
 			$j = $i+1;
 			$this->news[] = [
 				'title' => " Новость ". $j,
-				'description' => $faker->text(100)
+ 				'description' => $faker->text(100)
 			];
 
 		}
