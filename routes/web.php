@@ -20,11 +20,15 @@ use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+	return response()->json([
+		'title' => 'Example',
+		'description' => 'ExampleDescription'
+	]);
 });
 
 //admin
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
+	Route::view('/', 'admin.index');
 	Route::resource('news', AdminNewsController::class);
 	Route::resource('categories', AdminCategoryController::class);
 });

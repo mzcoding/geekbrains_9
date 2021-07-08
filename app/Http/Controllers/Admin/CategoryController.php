@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -14,8 +15,25 @@ class CategoryController extends Controller
      */
     public function index()
     {
+    	$categoryModel = new Category();
+    	//$categories = $categoryModel->getCategories();
+
+    	//dd(
+			$categories = \DB::table('categories')
+				->join('news', 'categories.id', '=', 'news.category_id')
+			    ->select(['news.*', 'categories.title as categoryTitle', 'categories.description as categoryDescription',
+					'categories.color as categoryColor'])
+				/*->where([
+					['news.id', '>', 5],
+					['categories.id', '<>', 1]
+				])
+				->Orwhere('news.title', 'like', '%'. request()->query('q').'%')*/
+					->whereBetween('news.id', [1,7])
+				    ->whereDate('news.created_at', '>=', now('	Pacific/Honolulu'))
+			    ->get();
+		//);
         return view('admin.categories.index', [
-        	'categoryList' => []
+        	'categoryList' => $categories
 		]);
     }
 
@@ -57,9 +75,9 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
-        //
+        dd($category);
     }
 
     /**
