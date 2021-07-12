@@ -16,6 +16,7 @@
                     Список категорий
                 </div>
                 <div class="card-body">
+                    @include('inc.message')
                     <table id="datatablesSimple">
                         <thead>
                         <tr>
@@ -29,9 +30,10 @@
 
                         <tbody>
                         @forelse($categoryList as $category)
+
                             <tr>
                                 <td>{{ $category->id }}</td>
-                                <td>{{ $category->title }}</td>
+                                <td>{{ $category->title }} ({{ optional($category->news)->count() }})</td>
                                 <td>{{ $category->description }}</td>
                                 <td>{{ $category->created_at }}</td>
                                 <td><a href="{{ route('admin.categories.edit', ['category' => $category->id]) }}" style="font-size: 12px;">ред.</a> &nbsp; | &nbsp;

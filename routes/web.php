@@ -36,6 +36,15 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
 //site
 Route::get('/news', [NewsController::class, 'index'])
 	->name('news');
-Route::get('/news/{id}', [NewsController::class, 'show'])
-	->where('id', '\d+')
+Route::get('/news/{news}', [NewsController::class, 'show'])
+	->where('news', '\d+')
     ->name('news.show');
+
+
+Route::get('collections', function() {
+	$collection = collect([
+		1,2,3,45,67,8,9,56,65,768,65
+	]);
+
+	dd($collection->chunk());
+});

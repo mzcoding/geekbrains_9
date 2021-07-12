@@ -1,1 +1,3 @@
-<h2>Ошибка!</h2>
+@if(session()->has('success'))
+    <div class="alert alert-success">{{ session()->get('success') }}</div>
+@endif

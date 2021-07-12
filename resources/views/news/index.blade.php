@@ -6,14 +6,15 @@
                @forelse($newsList as  $news)
                 <!-- Post preview-->
                 <div class="post-preview">
-                    <a href="{{ route('news.show', ['id' => $loop->iteration]) }}">
-                        <h2 class="post-title">{{ $news['title'] }}</h2>
-                        <h3 class="post-subtitle">{!! $news['description']  !!}</h3>
+                    <a href="{{ route('news.show', ['news' => $news]) }}">
+                        <h2 class="post-title">{{ $news->title }}</h2>
+                        <h3 class="post-subtitle">{!! $news->description  !!}</h3>
                     </a>
                     <p class="post-meta">
+                        <strong>Категория: {{ optional($news->category)->title }}</strong> &nbsp;
                         Опубликовал
                         <a href="#!">Админ</a>
-                        от {{ now()->format('d-m-Y H:i') }}
+                        от {{ $news->created_at->format('d-m-Y H:i') }}
                     </p>
                 </div>
                 <!-- Divider-->
@@ -26,7 +27,7 @@
 
                <!-- Pager-->
                 <div class="d-flex justify-content-end mb-4">
-                    <a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a>
+                    {{ $newsList->links() }}
                 </div>
             </div>
         </div>
