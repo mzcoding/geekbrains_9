@@ -35,7 +35,7 @@
                             <td>{{ $news->description }}</td>
                             <td>{{ $news->created_at->format('d-m-Y  H:i') }}</td>
                             <td><a href="{{ route('admin.news.edit', ['news' => $news]) }}" style="font-size: 12px;">ред.</a> &nbsp; | &nbsp;
-                                <a href="javascript:;" style="font-size: 12px; color:red;">Уд.</a>
+                                <a href="javascript:;" class="delete" rel="{{ $news->id }}" style="font-size: 12px; color:red;">Уд.</a>
                             </td>
                         </tr>
                         @empty
@@ -54,3 +54,25 @@
     </main>
 
 @endsection
+@push('js')
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script>
+        $(function() {
+            $("#datatablesSimple").on('click', 'a.delete', function() {
+                if(confirm("Подтверждаете удаление ?")) {
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: "DELETE",
+                        url: "/admin/news/" + $(this).attr('rel'),
+                        complete: function() {
+                            alert("Запись удалена");
+                            location.reload();
+                        }
+                    })
+                }
+            });
+        });
+    </script>
+@endpush

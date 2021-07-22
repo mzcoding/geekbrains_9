@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\NewsUpdate;
 use App\Models\Category;
 use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 class NewsController extends Controller
 {
@@ -45,7 +47,10 @@ class NewsController extends Controller
     public function store(Request $request)
 	{
 		$request->validate([
-			'title' => ['required', 'string']
+			'title' => ['required', 'string', 'min:3', 'max:199'],
+			'category_id' => ['required', 'integer', 'min:1'],
+			'status' => ['required'],
+			'description' => ['sometimes']
 		]);
 
 		$data = $request->only(['category_id', 'title', 'status', 'description']);
@@ -94,19 +99,19 @@ class NewsController extends Controller
 	 * @param News $news
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
-    public function update(Request $request, News $news)
+    public function update(NewsUpdate $request, News $news)
     {
-		$data = $request->only(['category_id', 'title', 'status', 'description']);
+    	$data = $request->validated();
 		$data['slug'] = Str::slug($data['title']);
 
-		$statusCategory = $news->fill($data)->save();
+    	$statusCategory = $news->fill($data)->save();
 
-		if($statusCategory) {
-			return redirect()->route('admin.news.index')
-				->with('success', 'Запись успешно обновлена');
-		}
+    	if ($statusCategory) {
+    		return redirect()->route('admin.news.index')
+				->with('success', __('message.admin.news.updated.success'));
+    	}
 
-		return back()->with('error', 'Не удалось обновить запись');
+    	return back()->with('error', __('message.admin.news.updated.fail'));
     }
 
 	/**
@@ -115,8 +120,14 @@ class NewsController extends Controller
 	 * @param News $news
 	 * @return \Illuminate\Http\Response
 	 */
-    public function destroy(News $news)
+    public function destroy(Request $request, News $news)
     {
-        //
+    	if($request->ajax()) {
+			try {
+				$news->delete();
+			} catch (\Exception $e) {
+				report($e);
+			}
+		}
     }
 }

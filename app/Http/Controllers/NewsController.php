@@ -17,7 +17,7 @@ class NewsController extends Controller
 		]);
 	}
 
-	public function show(int $id)
+	public function show(News $news)
 	{
 		return view('news.show');
 	}

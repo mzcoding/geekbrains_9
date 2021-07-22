@@ -37,7 +37,7 @@
                                 <td>{{ $category->description }}</td>
                                 <td>{{ $category->created_at }}</td>
                                 <td><a href="{{ route('admin.categories.edit', ['category' => $category->id]) }}" style="font-size: 12px;">ред.</a> &nbsp; | &nbsp;
-                                    <a href="javascript:;" style="font-size: 12px; color:red;">Уд.</a>
+                                    <a href="javascript:;"  style="font-size: 12px; color:red;">Уд.</a>
                                 </td>
                             </tr>
                         @empty

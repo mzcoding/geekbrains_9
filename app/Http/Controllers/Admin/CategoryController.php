@@ -21,9 +21,6 @@ class CategoryController extends Controller
 			->orderBy('id', 'desc')
 			->get();
 
-    	//dd($categories);
-
-    	//dd($categories);
 
         return view('admin.categories.index', [
         	'categoryList' => $categories

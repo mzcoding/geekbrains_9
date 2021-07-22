@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\SocialController;
+use App\Http\Controllers\Admin\ParserController;
+use App\Http\Controllers\Account\IndexController as AccountController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 
@@ -26,12 +29,8 @@ Route::get('/', function () {
 	]);
 });
 
-//admin
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], function() {
-	Route::view('/', 'admin.index');
-	Route::resource('news', AdminNewsController::class);
-	Route::resource('categories', AdminCategoryController::class);
-});
+
+
 
 //site
 Route::get('/news', [NewsController::class, 'index'])
@@ -41,10 +40,41 @@ Route::get('/news/{news}', [NewsController::class, 'show'])
     ->name('news.show');
 
 
-Route::get('collections', function() {
-	$collection = collect([
-		1,2,3,45,67,8,9,56,65,768,65
-	]);
+Route::get('session', function() {
+   session(['newSession' => 'newValue']);
+   if(session()->has('newSession')) {
 
-	dd($collection->chunk());
+   	   session()->remove('newSession');
+   }
+
+   return "Сессии нет";
 });
+
+//backoffice
+Route::group(['middleware' => 'auth'], function () {
+	Route::get('/account', AccountController::class)
+		->name('account');
+	Route::get('/logout', function () {
+		\Auth::logout();
+		return redirect()->route('login');
+	})->name('logout');
+
+	//admin
+	Route::group(['prefix' => 'admin', 'middleware' => 'admin', 'as' => 'admin.'], function() {
+		Route::view('/', 'admin.index')->name('index');
+		Route::resource('news', AdminNewsController::class);
+		Route::resource('categories', AdminCategoryController::class);
+
+		Route::get('/parse', ParserController::class);
+	});
+});
+
+Route::group(['middleware' => 'guest'], function() {
+	Route::get('/init/{driver?}', [SocialController::class, 'init'])
+		->name('social.init');
+	Route::get('/callback/{driver?}', [SocialController::class, 'callback'])
+		->name('social.callback');
+});
+
+Auth::routes();
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
