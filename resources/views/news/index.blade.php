@@ -11,6 +11,10 @@
                         <h3 class="post-subtitle">{!! $news->description  !!}</h3>
                     </a>
                     <p class="post-meta">
+                        @if($news->image)
+                        <img src="{{ Storage::disk('public')->url($news->image) }}" style="width: 330px;">
+                        <br><br>
+                        @endif
                         <strong>Категория: {{ optional($news->category)->title }}</strong> &nbsp;
                         Опубликовал
                         <a href="#!">Админ</a>

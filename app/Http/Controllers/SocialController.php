@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Social;
-use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
 class SocialController extends Controller
